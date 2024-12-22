@@ -1,25 +1,47 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CustomToolbar } from "@/components/CalendarToolbar";
+import { createClient } from "@/utils/supabase/client";
+import { RRule } from "rrule";
 
 const localizer = momentLocalizer(moment);
 
-const events = [
-  {
-    title: "Demo Suite",
-    start: new Date(2024, 9, 10, 11, 0),
-    end: new Date(2024, 9, 10, 12, 0),
-  },
-  {
-    title: "Authentication",
-    start: new Date(2024, 9, 11, 8, 0),
-    end: new Date(2024, 9, 11, 9, 0),
-  },
-];
-
 export function CustomCalendar() {
+  const supabase = createClient();
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    async function retrieveSchedule() {
+      const { data: retrieveEvents } = await supabase.from("schedule").select();
+
+      let allEvents = [];
+      for (let i = 0; i < retrieveEvents.length; i++) {
+        const event = retrieveEvents[i];
+        const dtstart = new Date(event.start);
+        const rule = RRule.fromString(event.rRule);
+        const updatedRule = new RRule({
+          ...rule.origOptions,
+          dtstart,
+          count: 100,
+        });
+
+        const recurringEvents = updatedRule.all().map((date) => ({
+          ...event,
+          start: new Date(date),
+          end: new Date(date.getTime() + 60 * 60 * 1000),
+        }));
+        allEvents = [...allEvents, ...recurringEvents];
+      }
+
+      console.log(allEvents);
+      setEvents(allEvents);
+    }
+
+    retrieveSchedule();
+  }, []);
+
   return (
     <Calendar
       localizer={localizer}
@@ -28,7 +50,7 @@ export function CustomCalendar() {
       endAccessor="end"
       defaultView="week"
       components={{ toolbar: CustomToolbar }}
-      style={{ height: "100%" }}
+      style={{ height: "100%", width: "100%" }}
       className="border rounded-lg"
     />
   );
