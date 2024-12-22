@@ -1,14 +1,21 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { CustomToolbar } from "@/components/CalendarToolbar";
 import { createClient } from "@/utils/supabase/client";
 import { RRule } from "rrule";
 
 const localizer = momentLocalizer(moment);
 
-export function CustomCalendar() {
+export function CustomCalendar({
+  currentDate,
+  setCurrentDate,
+  currentView,
+}: {
+  currentDate: Date;
+  setCurrentDate: (date: Date) => void;
+  currentView: string;
+}) {
   const supabase = createClient();
   const [events, setEvents] = useState([]);
 
@@ -43,15 +50,24 @@ export function CustomCalendar() {
   }, []);
 
   return (
-    <Calendar
-      localizer={localizer}
-      events={events}
-      startAccessor="start"
-      endAccessor="end"
-      defaultView="week"
-      components={{ toolbar: CustomToolbar }}
-      style={{ height: "100%", width: "100%" }}
-      className="border rounded-lg"
-    />
+    <div>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        date={currentDate}
+        view={currentView}
+        onNavigate={(newDate) => setCurrentDate(newDate)}
+        onView={(view) => setCurrentView(view)}
+        components={{
+          timeGutterHeader: () => null,
+          timeGutter: () => null,
+        }}
+        toolbar={false}
+        style={{ height: "100%", width: "100%" }}
+        className="border rounded-lg"
+      />
+    </div>
   );
 }

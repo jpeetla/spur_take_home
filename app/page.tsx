@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/Modal";
 import { CustomCalendar } from "@/components/Calendar";
 import { createClient } from "@/utils/supabase/client";
+import moment from "moment";
 
 export default function Page() {
   const supabase = createClient();
@@ -13,6 +14,9 @@ export default function Page() {
   const [selectedTestSuite, setTestSuite] = useState<string>("");
   const [testSuites, setTestSuites] = useState<string[]>([]);
   const [dateTime, setDateTime] = useState<string>("");
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState("week");
 
   useEffect(() => {
     async function retrieveTestSuites() {
@@ -51,15 +55,60 @@ export default function Page() {
     ]);
   }
 
+  const handleNavigate = (action: string) => {
+    let newDate = currentDate;
+    if (action === "NEXT") {
+      newDate = new Date(currentDate.setDate(currentDate.getDate() + 7));
+    } else if (action === "PREV") {
+      newDate = new Date(currentDate.setDate(currentDate.getDate() - 7));
+    } else if (action === "TODAY") {
+      newDate = new Date();
+    }
+    setCurrentDate(newDate);
+  };
+
+  const getLabel = () => {
+    if (currentView === "month") {
+      return moment(currentDate).format("MMMM YYYY");
+    } else if (currentView === "week") {
+      const startOfWeek = moment(currentDate).startOf("week").format("MMMM DD");
+      const endOfWeek = moment(currentDate).endOf("week").format("MMMM DD");
+      return `${startOfWeek} – ${endOfWeek}`;
+    } else if (currentView === "day") {
+      return moment(currentDate).format("MMMM DD, YYYY");
+    }
+    return moment(currentDate).format("MMMM DD, YYYY");
+  };
+
   return (
-    <div className="min-h-screen flex flex-col justify-start pt-10 pl-10">
+    <div className="w-full min-h-screen flex flex-col justify-start pt-10 pl-10 pr-10">
       <h1 className="text-2xl font-bold mb-5">Scheduled Suites</h1>
-      <Button
-        onClick={() => setIsModalOpen(true)}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg px-4 py-2"
-      >
-        + Schedule Test
-      </Button>
+      <div className="flex items-center space-x-4 mb-4">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-blue-600 hover:bg-blue-750 text-white font-semibold rounded-lg px-4 py-2 w-40"
+        >
+          + Schedule Test
+        </Button>
+
+        <div className="flex items-center space-x-2 border border-gray-300 rounded-lg p-1">
+          <button
+            onClick={() => handleNavigate("PREV")}
+            className="text-gray-600 font-bold text-lg p-1"
+          >
+            &#x2039;
+          </button>
+          <span className="text-gray-800 font-semibold text-md">
+            {getLabel()}
+          </span>
+          <button
+            onClick={() => handleNavigate("NEXT")}
+            className="text-gray-600 font-bold text-lg p-1"
+          >
+            &#x203A;
+          </button>
+        </div>
+      </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-xl font-bold mb-4">Schedule Detail</h2>
@@ -133,8 +182,12 @@ export default function Page() {
         </form>
       </Modal>
 
-      <div className="w-full h-[90vh] px-10 pt-5">
-        <CustomCalendar />
+      <div className="pt-5">
+        <CustomCalendar
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
+          currentView={currentView}
+        />
       </div>
     </div>
   );

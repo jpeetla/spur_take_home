@@ -9,20 +9,20 @@ export function CustomToolbar({
   onNavigate: (action: string) => void;
 }) {
   return (
-    <div className="flex justify-between items-center mb-5">
-      <Button
+    <div className="flex justify-center items-center space-x-4 border border-gray-300 rounded-lg p-2 shadow-sm">
+      <button
         onClick={() => onNavigate("PREV")}
-        className="bg-blue-500 text-white font-bold px-4 py-2 rounded"
+        className="text-gray-600 font-bold text-lg p-1"
       >
-        Back
-      </Button>
-      <span className="text-lg font-semibold">{label}</span>
-      <Button
+        &#x2039; {/* Left arrow symbol */}
+      </button>
+      <span className="text-gray-800 font-semibold">{label}</span>
+      <button
         onClick={() => onNavigate("NEXT")}
-        className="bg-blue-500 text-white font-bold px-4 py-2 rounded"
+        className="text-gray-600 font-bold text-lg p-1"
       >
-        Next
-      </Button>
+        &#x203A; {/* Right arrow symbol */}
+      </button>
     </div>
   );
 }
