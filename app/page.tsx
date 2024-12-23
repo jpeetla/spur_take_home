@@ -188,6 +188,10 @@ export default function Page() {
               </Button>
               <Button
                 onClick={() => {
+                  if (new Date(dateTime) < new Date()) {
+                    alert("Start date and time cannot be in the past.");
+                    return;
+                  }
                   saveToSupa();
                   setIsModalOpen(false);
                 }}

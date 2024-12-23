@@ -35,8 +35,8 @@ const fetchSchedule = async () => {
 
 export const useSchedule = () => {
   return useQuery({
-    queryKey: ["schedule"], // Unique key to cache the data
-    queryFn: fetchSchedule, // Function to fetch data
-    staleTime: 1000 * 60 * 5, // Cache is fresh for 5 minutes
+    queryKey: ["schedule"],
+    queryFn: fetchSchedule,
+    staleTime: 1000 * 60 * 5,
   });
 };
