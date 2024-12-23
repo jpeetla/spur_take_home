@@ -6,7 +6,6 @@ A Next.js application to schedule and keep track of recurring tests. Deployed on
 
 - Node.js (v18 or higher)
 - npm or yarn
-- OpenAI API key
 
 ## Installation
 
