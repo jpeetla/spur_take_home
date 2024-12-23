@@ -83,9 +83,14 @@ export function CustomCalendar({
         toolbar={false}
         style={{ height: "100%", width: "100%" }}
         className="border rounded-lg"
-        components={{
-          eventWrapper: ({ event }) => <CustomEventWrapper event={event} />,
-        }}
+        // components={{
+        //   eventWrapper: ({ event }) => <CustomEventWrapper event={event} />,
+        // }}
+        eventPropGetter={(event) => ({
+          style: {
+            fontSize: "14px",
+          },
+        })}
       />
     </div>
   ) : (
