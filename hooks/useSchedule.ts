@@ -18,9 +18,9 @@ export const fetchSchedule = async () => {
     const formattedDate = formatDateTime(dtstart);
     const rrule = event.rRule;
 
-    const fullRule = `DTSTART:${formattedDate}\n${rrule};COUNT=20;WKST=0`;
+    const fullRule = `DTSTART;TZID=America/New_York:${formattedDate}\n${rrule};COUNT=20;WKST=0`;
     let rule = RRule.fromString(fullRule);
-    rule.options.tzid = "UTC";
+    rule.options.tzid = "America/New_York";
     console.log("rule", rule.options.dtstart);
 
     const recurringEvents = rule.all().map((date) => ({
