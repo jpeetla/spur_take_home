@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { createClient } from "@/utils/supabase/client";
-import { RRule } from "rrule";
+import { useSchedule } from "@/hooks/useSchedule";
 
 const localizer = momentLocalizer(moment);
 
@@ -61,45 +60,16 @@ export function CustomEventWrapper({ event }: { event: any }) {
 export function CustomCalendar({
   currentDate,
   setCurrentDate,
-  currentView,
 }: {
   currentDate: Date;
   setCurrentDate: (date: Date) => void;
-  currentView: string;
 }) {
-  const supabase = createClient();
-  const [events, setEvents] = useState([]);
+  const { data: events, isLoading, isError, error } = useSchedule();
 
-  useEffect(() => {
-    async function retrieveSchedule() {
-      const { data: retrieveEvents } = await supabase.from("schedule").select();
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
 
-      let allEvents: any[] | ((prevState: never[]) => never[]) = [];
-      for (let i = 0; retrieveEvents && i < retrieveEvents.length; i++) {
-        const event = retrieveEvents[i];
-        const dtstart = new Date(event.start);
-        const rule = RRule.fromString(event.rRule);
-        const updatedRule = new RRule({
-          ...rule.origOptions,
-          dtstart,
-          count: 100,
-        });
-
-        const recurringEvents = updatedRule.all().map((date) => ({
-          ...event,
-          start: new Date(date),
-          end: new Date(date.getTime() + 60 * 60 * 1000),
-        }));
-        allEvents = [...allEvents, ...recurringEvents];
-      }
-
-      setEvents(allEvents as never[]);
-    }
-
-    retrieveSchedule();
-  }, []);
-
-  return events.length > 0 ? (
+  return (events?.length ?? 0 > 0) ? (
     <div>
       <Calendar
         localizer={localizer}
@@ -107,14 +77,13 @@ export function CustomCalendar({
         startAccessor="start"
         endAccessor="end"
         date={currentDate}
-        view={currentView}
+        view={"week"}
         onNavigate={(newDate) => setCurrentDate(newDate)}
-        onView={(view) => setCurrentView(view)}
         toolbar={false}
         style={{ height: "100%", width: "100%" }}
         className="border rounded-lg"
         components={{
-          eventWrapper: ({ event }) => <CustomEventWrapper event={event} />, // Full custom event rendering
+          eventWrapper: ({ event }) => <CustomEventWrapper event={event} />,
         }}
       />
     </div>
