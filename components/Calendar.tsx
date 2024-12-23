@@ -4,7 +4,6 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { createClient } from "@/utils/supabase/client";
 import { RRule } from "rrule";
-import { designedEvent } from "@/components/Event";
 
 const localizer = momentLocalizer(moment);
 
@@ -94,14 +93,13 @@ export function CustomCalendar({
         allEvents = [...allEvents, ...recurringEvents];
       }
 
-      console.log(allEvents);
       setEvents(allEvents);
     }
 
     retrieveSchedule();
   }, []);
 
-  return (
+  return events.length > 0 ? (
     <div>
       <Calendar
         localizer={localizer}
@@ -120,5 +118,7 @@ export function CustomCalendar({
         }}
       />
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 }
