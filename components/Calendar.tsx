@@ -72,6 +72,7 @@ export function CustomCalendar({
   return (events?.length ?? 0 > 0) ? (
     <div>
       <Calendar
+        key={events?.length ?? 0} // Force re-render when events are updated
         localizer={localizer}
         events={events}
         startAccessor="start"
