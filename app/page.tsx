@@ -114,18 +114,36 @@ export default function Page() {
         <h2 className="text-xl font-bold mb-4">Schedule Detail</h2>
         <form>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium">
+            <label className="block text-gray-700 font-medium mb-2">
               Test Suite
             </label>
-            <select
-              className="w-full border rounded p-2 mt-1"
-              value={selectedTestSuite}
-              onChange={(e) => setTestSuite(e.target.value)}
-            >
-              {testSuites.map((suite) => (
-                <option key={suite}>{suite}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                className="w-full border border-gray-300 rounded-lg p-3 appearance-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                value={selectedTestSuite}
+                onChange={(e) => setTestSuite(e.target.value)}
+              >
+                {testSuites.map((suite) => (
+                  <option key={suite}>{suite}</option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="mb-4">
@@ -140,7 +158,7 @@ export default function Page() {
             />
           </div>
 
-          <div className="flex gap-2 mb-4">
+          <div className="flex flex-col gap-2 mb-4">
             <label className="block text-gray-700 font-medium">
               Run weekly on:
             </label>
@@ -150,7 +168,7 @@ export default function Page() {
                   key={day}
                   type="button"
                   onClick={() => toggleDay(day)}
-                  className={`border rounded px-2 py-1 ${
+                  className={`border rounded px-3 py-1 ${
                     selectedDays.includes(day)
                       ? "bg-blue-500 text-white"
                       : "bg-gray-200 hover:bg-gray-300"
@@ -162,7 +180,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-between gap-2">
             <Button
               onClick={() => setIsModalOpen(false)}
               className="bg-red-500 text-white font-bold px-4 py-2 rounded"
