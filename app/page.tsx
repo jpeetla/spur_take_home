@@ -16,6 +16,7 @@ export default function Page() {
   const [selectedTestSuite, setTestSuite] = useState<string>("");
   const [testSuites, setTestSuites] = useState<string[]>([]);
   const [dateTime, setDateTime] = useState<string>("");
+  const [needsRefresh, setNeedsRefresh] = useState<boolean>(true);
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -201,6 +202,7 @@ export default function Page() {
                   alert("Please select at least one recurring day...");
                 } else {
                   saveToSupa();
+                  setNeedsRefresh(true);
                   setIsModalOpen(false);
                 }
               }}
@@ -216,6 +218,8 @@ export default function Page() {
         <CustomCalendar
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
+          needsRefresh={needsRefresh}
+          setNeedsRefresh={setNeedsRefresh}
         />
       </div>
     </div>

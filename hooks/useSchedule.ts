@@ -15,7 +15,6 @@ export const fetchSchedule = async () => {
     const event = retrieveEvents[i];
     const dtstart = new Date(event.start);
 
-    const rule = RRule.fromString(event.rRule);
     const byWeekday = event.rRule
       .split("BYDAY=")[1]
       .split(",")
@@ -40,7 +39,7 @@ export const fetchSchedule = async () => {
           case "SA":
             return 5 + adjustment;
           case "SU":
-            return 6 + adjustment;
+            return (6 + adjustment) % 7;
           default:
             return null;
         }
@@ -53,8 +52,6 @@ export const fetchSchedule = async () => {
       // byweekday: rule.origOptions.byweekday || [dtstart.getDay()], // Ensure weekday matches dtstart
       byweekday: byWeekday,
     });
-
-    console.log("dtstart", dtstart.getDay());
 
     const recurringEvents = updatedRule.all().map((date) => ({
       ...event,

@@ -3,26 +3,30 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { fetchSchedule } from "@/hooks/useSchedule";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const localizer = momentLocalizer(moment);
 
 export function CustomCalendar({
   currentDate,
   setCurrentDate,
+  needsRefresh,
+  setNeedsRefresh,
 }: {
   currentDate: Date;
   setCurrentDate: (date: Date) => void;
+  needsRefresh: boolean;
+  setNeedsRefresh: (refresh: boolean) => void;
 }) {
   const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchSchedule().then((events) => {
-      setEvents(events);
-    });
-  }, []);
-
-  console.log(events);
+    if (needsRefresh) {
+      fetchSchedule().then((events) => {
+        setEvents(events);
+      });
+      setNeedsRefresh(false);
+    }
+  }, [needsRefresh, setNeedsRefresh]);
 
   return (
     <div>
