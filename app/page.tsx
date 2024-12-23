@@ -188,10 +188,30 @@ export default function Page() {
               </Button>
               <Button
                 onClick={() => {
+                  const selectedDate = new Date(dateTime);
+                  const currentDay = selectedDate.toLocaleString("en-US", {
+                    weekday: "short",
+                  });
+
                   if (new Date(dateTime) < new Date()) {
-                    alert("Start date and time cannot be in the past.");
+                    alert(
+                      "Start date cannot be in the past. Please select a valid date..."
+                    );
                     return;
                   }
+
+                  if (!selectedDays.includes(currentDay)) {
+                    alert(
+                      "Start date must be in the recurring days. Please select a valid startdate or change the recurring days..."
+                    );
+                    return;
+                  }
+
+                  if (selectedDays.length === 0) {
+                    alert("Please select at least one recurring day...");
+                    return;
+                  }
+
                   saveToSupa();
                   setIsModalOpen(false);
                 }}
