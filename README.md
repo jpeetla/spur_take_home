@@ -1,6 +1,6 @@
 # Scheduler for Recurring Tasks
 
-A Next.js application to schedule and keep track of recurring tests. 
+A Next.js application to schedule and keep track of recurring tests. Deployed on Vercel @ https://spur-take-home.vercel.app
 
 ## Prerequisites
 
@@ -34,6 +34,12 @@ Production mode:
 npm run build
 npm run start
 ```
+## File Structure
+
+- /app/page.tsx: Primary calendar view for application, button to open Modal and save Modal data to Supabase
+- /components/Calendar.tsx: skeleton structure for Calendar, populates Calendar View
+- /components/Modal.tsx: skeleton structure of pop-up Modal that allows users to start a new Test Suite
+- /hooks/useSchedule.ts: retrieves existing Events from supabase to populate Calendar 
 
 ## Contributing
 
