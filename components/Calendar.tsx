@@ -74,8 +74,8 @@ export function CustomCalendar({
     async function retrieveSchedule() {
       const { data: retrieveEvents } = await supabase.from("schedule").select();
 
-      let allEvents = [];
-      for (let i = 0; i < retrieveEvents.length; i++) {
+      let allEvents: any[] | ((prevState: never[]) => never[]) = [];
+      for (let i = 0; retrieveEvents && i < retrieveEvents.length; i++) {
         const event = retrieveEvents[i];
         const dtstart = new Date(event.start);
         const rule = RRule.fromString(event.rRule);
@@ -93,7 +93,7 @@ export function CustomCalendar({
         allEvents = [...allEvents, ...recurringEvents];
       }
 
-      setEvents(allEvents);
+      setEvents(allEvents as never[]);
     }
 
     retrieveSchedule();
