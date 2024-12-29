@@ -48,5 +48,5 @@ export const generateRecurringEvents = (options: {
     iteration++;
   }
 
-  return occurrences.sort((a, b) => a.getTime() - b.getTime()); // Ensure dates are sorted
+  return occurrences.sort((a, b) => a.getTime() - b.getTime());
 };
